@@ -1,17 +1,18 @@
 {
   "variables": {
-    "name": "jenkins-packer-agent",
-    "git_commit": "",
+    "base_image": "",
+    "github_token": "",
     "git_branch": "",
-    "account_file": "",
-    "project_id": "null"
+    "git_commit": "",
+    "image_registry": "",
+    "image_tag": ""
   },
   "builders": [
     {
       "type": "docker",
-      "image": "debian:jessie",
+      "image": "{{user `base_image`}}",
       "run_command": ["-d", "-i", "-t", "-u", "root", "{{.Image}}", "/bin/bash"],
-      "commit": "true" 
+      "commit": "true"
     }
   ],
   "provisioners": [
@@ -65,10 +66,22 @@
     [
         {
             "type": "docker-tag",
-            "repository": "gcr.io/{{user `project_id`}}/{{user `name`}}",
-            "tag": "{{user `git_branch`}}-{{user `git_commit`}}",
-            "only": ["docker"]
-        }
+            "repository": "{{user `image_registry`}}",
+            "tag": "{{user `image_tag`}}",
+            "only": ["docker"],
+            "force": true
+        },
+        "docker-push"
+    ],
+    [
+        {
+            "type": "docker-tag",
+            "repository": "{{user `image_registry`}}",
+            "tag": "{{user `git_branch`}}-latest",
+            "only": ["docker"],
+            "force": true
+        },
+        "docker-push"
     ]
   ]
 }
