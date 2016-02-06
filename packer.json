@@ -18,17 +18,18 @@
   "provisioners": [
     {
       "type": "file",
-      "source": ""
+      "source": "packer_0.8.6_SHA256SUMS",
+      "destination": "/packer_0.8.6_SHA256SUMS"
     },
     {
       "type": "shell",
       "inline": [
         "apt-get update -y",
         "apt-get upgrade -y",
-        "apt-get install -y supervisor default-jre unzip curl git rsync --fix-missing",
+        "apt-get install -y --no-install-recommends supervisor default-jre unzip curl git rsync --fix-missing",
         "useradd -c 'Jenkins agent' -d /home/jenkins-agent -m jenkins-agent",
         "curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar",
-        "curl -sSkL https://dl.bintray.com/mitchellh/packer/packer_0.8.6_linux_amd64.zip -o packer_0.8.6_linux_amd64.zip; sha256sum -c packer_0.8.6_SHA256SUMS 2>&1 | grep OK && unzip packer_0.8.6_linux_amd64.zip -d /usr/local/bin"
+        "curl -sSL https://releases.hashicorp.com/packer/0.8.6/packer_0.8.6_linux_amd64.zip -o packer_0.8.6_linux_amd64.zip && unzip packer_0.8.6_linux_amd64.zip -d /usr/local/bin"
       ]
     },
     {
@@ -51,11 +52,12 @@
         "wget -nv https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip",
         "unzip google-cloud-sdk.zip",
         "rm google-cloud-sdk.zip",
-        "google-cloud-sdk/install.sh --usage-reporting=true --disable-installation-options",
-        "google-cloud-sdk/bin/gcloud --quiet components update preview",
+        "google-cloud-sdk/install.sh --usage-reporting=true --path-update=true --bash-completion=true --rc-path=/.bashrc --additional-components kubectl",
+        "google-cloud-sdk/bin/gcloud --quiet components update",
         "google-cloud-sdk/bin/gcloud --quiet config set component_manager/disable_update_check true",
-    	"ln -s /usr/local/bin/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud",
-    	"ln -s /usr/local/bin/google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil"
+        "google-cloud-sdk/bin/gcloud components list",
+      	"ln -s /usr/local/bin/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud",
+      	"ln -s /usr/local/bin/google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil"
       ]
     },
     {
@@ -74,8 +76,7 @@
             "tag": "{{user `image_tag`}}",
             "only": ["docker"],
             "force": true
-        },
-        "docker-push"
+        }
     ],
     [
         {
@@ -84,8 +85,7 @@
             "tag": "{{user `git_branch`}}-latest",
             "only": ["docker"],
             "force": true
-        },
-        "docker-push"
+        }
     ]
   ]
 }
