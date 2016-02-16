@@ -20,6 +20,7 @@ node('gcp-packer') {
   packer.build('./packer.json', 'jenkins-packer-agent',
         'debian:jessie',
         'd8610486-c78a-4cfc-8b5d-09b8011a30cd')
+  imageBuilt = packer.imageBuilt()
 }
 
 slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Completed\n${imageBuilt}", '',
