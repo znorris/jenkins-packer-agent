@@ -1,7 +1,5 @@
 {
   "variables": {
-    "base_image": "",
-    "github_token": "",
     "git_branch": "",
     "git_commit": "",
     "image_registry": "",
@@ -10,17 +8,12 @@
   "builders": [
     {
       "type": "docker",
-      "image": "{{user `base_image`}}",
+      "image": "debian:jessie",
       "run_command": ["-d", "-i", "-t", "-u", "root", "{{.Image}}", "/bin/bash"],
       "commit": "true"
     }
   ],
   "provisioners": [
-    {
-      "type": "file",
-      "source": "packer_0.8.6_SHA256SUMS",
-      "destination": "/packer_0.8.6_SHA256SUMS"
-    },
     {
       "type": "shell",
       "inline": [

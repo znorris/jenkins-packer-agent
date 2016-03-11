@@ -9,19 +9,25 @@ fileLoader.withGit(
 
 def cleanJobName = env.JOB_NAME.replaceAll('%2F','/')
 
-slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Started", '',
-      'd83ac413-e303-4dce-bc3a-58fcb86e19d9')
-
 node('gcp-packer') {
   stage 'Development'
-  checkout scm
+  try{
+    checkout scm
+  } catch (Exception e){
+    slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Failed Development Stage", '',
+          'd83ac413-e303-4dce-bc3a-58fcb86e19d9')
+    throw e
+  }
 
-  stage 'Build Image'
-  packer.build('./packer.json', 'jenkins-packer-agent',
-        'debian:jessie',
-        'd8610486-c78a-4cfc-8b5d-09b8011a30cd')
-  imageBuilt = packer.imageBuilt()
+
+  stage 'Build'
+  try{
+    packer.build('./packer.json', 'jenkins-packer-agent')
+    slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Completed\n${packer.imageBuilt()}", '',
+          'd83ac413-e303-4dce-bc3a-58fcb86e19d9')
+  } catch (Exception e){
+    slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Failed Build Stage", '',
+          'd83ac413-e303-4dce-bc3a-58fcb86e19d9')
+    throw e
+  }
 }
-
-slack.send("${cleanJobName} - <${env.BUILD_URL}|#${env.BUILD_NUMBER}> Completed\n${imageBuilt}", '',
-      'd83ac413-e303-4dce-bc3a-58fcb86e19d9')
