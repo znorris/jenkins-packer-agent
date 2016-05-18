@@ -19,7 +19,7 @@
       "inline": [
         "apt-get update -y",
         "apt-get upgrade -y",
-        "apt-get install -y --no-install-recommends supervisor default-jre unzip curl git rsync --fix-missing",
+        "apt-get install -y --no-install-recommends supervisor default-jre unzip curl git rsync jq --fix-missing",
         "useradd -c 'Jenkins agent' -d /home/jenkins-agent -m jenkins-agent",
         "curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar",
         "curl -sSL https://releases.hashicorp.com/packer/0.10.0/packer_0.10.0_linux_amd64.zip -o packer_linux_amd64.zip && unzip packer_linux_amd64.zip -d /usr/local/bin && rm packer_linux_amd64.zip"
