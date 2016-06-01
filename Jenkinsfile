@@ -1,6 +1,6 @@
 #!groovy
 fileLoader.withGit(
-        'git@github.com:wyndow/jenkins-groovy-lib.git',
+        'https://github.com/wyndow/jenkins-groovy-lib.git',
         'master', '08a2e627-40ea-43a9-9a8f-d1bbf370139b', '') {
           jenkins = fileLoader.load('jenkins');
           packer = fileLoader.load('packer');
