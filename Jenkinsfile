@@ -1,10 +1,10 @@
 #!groovy
 fileLoader.withGit(
-        'https://source.developers.google.com/p/automated-builder-wyndow/',
-        'master', 'c1a38b22-0cb5-4f54-a7a9-06336b609be3', '') {
-          jenkins = fileLoader.load('src/com/wyndow/build/jenkins');
-          packer = fileLoader.load('src/com/wyndow/build/packer');
-          slack = fileLoader.load('src/com/wyndow/build/slack');
+        'git@github.com:wyndow/jenkins-groovy-lib.git',
+        'master', '08a2e627-40ea-43a9-9a8f-d1bbf370139b', '') {
+          jenkins = fileLoader.load('jenkins');
+          packer = fileLoader.load('packer');
+          slack = fileLoader.load('slack');
         }
 
 def cleanJobName = env.JOB_NAME.replaceAll('%2F','/')
