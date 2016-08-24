@@ -21,7 +21,7 @@
         "apt-get upgrade -y",
         "apt-get install -y --no-install-recommends supervisor default-jre unzip curl git rsync jq --fix-missing",
         "useradd -c 'Jenkins agent' -d /home/jenkins-agent -m jenkins-agent",
-        "curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar",
+        "curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-jar-with-dependencies.jar https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar",
         "curl -sSL https://releases.hashicorp.com/packer/0.10.0/packer_0.10.0_linux_amd64.zip -o packer_linux_amd64.zip && unzip packer_linux_amd64.zip -d /usr/local/bin && rm packer_linux_amd64.zip"
       ]
     },
@@ -43,7 +43,7 @@
         "apt-get clean",
         "cd /usr/local/bin",
         "wget -nv https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip",
-        "unzip google-cloud-sdk.zip",
+        "unzip -q google-cloud-sdk.zip",
         "rm google-cloud-sdk.zip",
         "google-cloud-sdk/install.sh --usage-reporting=true --path-update=true --bash-completion=true --rc-path=/.bashrc --additional-components kubectl",
         "google-cloud-sdk/bin/gcloud --quiet components update",
