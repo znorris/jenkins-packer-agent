@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins-agent
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: agent
+        label: gcp-packer
+    spec:
+      containers:
+      - name: jenkins-agent
+        image: gcr.io/automated-builder-wyndow/jenkins-packer-agent:master-5420fd9
+        resources:
+          requests:
+            memory: 700Mi
+            cpu: 500m
+          limits:
+            memory: 700Mi
+        command:
+        - sh
+        - -c
+        - /usr/local/bin/jenkins-docker-supervisor.sh -master http://$JENKINS_UI_SERVICE_HOST:$JENKINS_UI_SERVICE_PORT_UI
+          -username wyndow-machine -password 0cae8d8031a374f87a050da67ef8d4f34c79be22
+          -tunnel $JENKINS_DISCOVERY_SERVICE_HOST:$JENKINS_DISCOVERY_SERVICE_PORT_AGENTS -executors
+          1 -labels gcp-packer -mode exclusive
+        env:
+        - name: HOME
+          value: /home/jenkins-agent
+        volumeMounts:
+          - mountPath: /var/lib/docker
+            name: docker-lib
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
+          - mountPath: /usr/bin/docker
+            name: docker-bin
+          - mountPath: /tmp
+            name: docker-tmp
+      volumes:
+        - name: docker-lib
+          hostPath:
+            path: /var/lib/docker
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: docker-bin
+          hostPath:
+            path: /usr/bin/docker
+        - name: docker-tmp
+          hostPath:
+            path: /tmp
