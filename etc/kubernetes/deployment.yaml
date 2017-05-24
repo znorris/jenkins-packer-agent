@@ -23,7 +23,7 @@ spec:
         - sh
         - -c
         - /usr/local/bin/jenkins-docker-supervisor.sh -master http://$JENKINS_UI_SERVICE_HOST:$JENKINS_UI_SERVICE_PORT_UI
-          -username wyndow-machine -password 0cae8d8031a374f87a050da67ef8d4f34c79be22
+          -username wyndow-machine -password ce34665e75871643e668ebf89410b67faa7679f7
           -tunnel $JENKINS_DISCOVERY_SERVICE_HOST:$JENKINS_DISCOVERY_SERVICE_PORT_AGENTS -executors
           1 -labels gcp-packer -mode exclusive
         env:
