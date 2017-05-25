@@ -11,39 +11,34 @@ spec:
         label: gcp-packer
     spec:
       containers:
-      - name: jenkins-agent
-        image: gcr.io/automated-builder-wyndow/jenkins-packer-agent:master-5420fd9
-        resources:
-          requests:
-            memory: 700Mi
-            cpu: 500m
-          limits:
-            memory: 700Mi
-        command:
-        - sh
-        - -c
-        - /usr/local/bin/jenkins-docker-supervisor.sh -master http://$JENKINS_UI_SERVICE_HOST:$JENKINS_UI_SERVICE_PORT_UI
-          -username wyndow-machine -password ce34665e75871643e668ebf89410b67faa7679f7
-          -tunnel $JENKINS_DISCOVERY_SERVICE_HOST:$JENKINS_DISCOVERY_SERVICE_PORT_AGENTS -executors
-          1 -labels gcp-packer -mode exclusive
-        env:
-        - name: HOME
-          value: /home/jenkins-agent
-        volumeMounts:
-          - mountPath: /home/jenkins-agent
-            name: jenkins
-          - mountPath: /var/lib/docker
-            name: docker-lib
-          - mountPath: /var/run/docker.sock
-            name: docker-sock
-          - mountPath: /usr/bin/docker
-            name: docker-bin
-          - mountPath: /tmp
-            name: docker-tmp
+        - name: jenkins-agent
+          image: gcr.io/automated-builder-wyndow/jenkins-packer-agent:master-5420fd9
+          resources:
+            requests:
+              memory: 700Mi
+              cpu: 500m
+            limits:
+              memory: 700Mi
+          command:
+            - sh
+            - -c
+            - /usr/local/bin/jenkins-docker-supervisor.sh -master http://$JENKINS_UI_SERVICE_HOST:$JENKINS_UI_SERVICE_PORT_UI
+              -username wyndow-machine -password ce34665e75871643e668ebf89410b67faa7679f7
+              -tunnel $JENKINS_DISCOVERY_SERVICE_HOST:$JENKINS_DISCOVERY_SERVICE_PORT_AGENTS -executors
+              1 -labels gcp-packer -mode exclusive
+          env:
+            - name: HOME
+              value: /home/jenkins-agent
+          volumeMounts:
+            - mountPath: /var/lib/docker
+              name: docker-lib
+            - mountPath: /var/run/docker.sock
+              name: docker-sock
+            - mountPath: /usr/bin/docker
+              name: docker-bin
+            - mountPath: /tmp
+              name: docker-tmp
       volumes:
-        - name: jenkins
-          hostPath:
-            path: /tmp/jenkins-agent
         - name: docker-lib
           hostPath:
             path: /var/lib/docker
